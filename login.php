@@ -1,25 +1,42 @@
+
 <?php
 
 session_start();
-if (isset($_SESSION['user_name'])) {
-   
-    if($_SESSION['user_name']=='user'){
-        ?>
-        
-    <!DOCTYPE html>   
-    <html>  
-    </body>
-        <form>
-            <a href="admin.php"> Users info</a><br>
-            <a href="profile.php">Profile</a><br>
-            <a href="logout.php">logout</a>
-        </form>
-    </body>     
-    </html>
-        <?php
-   exit;
+if (($_SESSION['user_name']!=NULL)) {
+    $servername = "localhost";
+    $Username = "siddhu";
+    $Password = "amma";
+    $dbname = "userinfo";
+    $conn = mysqli_connect($servername, $Username, $Password, $dbname);
+    
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
     }
-    else{
+    $stmt = $conn->prepare("SELECT Admin FROM USERS WHERE Username = ?");
+    $stmt->bind_param("s", $_SESSION['user_name']);
+    $stmt->execute();
+    $stmt->bind_result($admin);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($admin !== null) {
+        
+           ?>
+            
+        <!DOCTYPE html>   
+        <html>  
+        </body>
+            <form>
+                <a href="admin.php"> Users info</a><br>
+                <a href="profile.php">Profile</a><br>
+                <a href="logout.php">logout</a>
+            </form>
+        </body>     
+        </html>
+            
+    <?php exit; ?>
+    <?php
+    }else{
         header('Location: profile.php');
         exit; 
     }
@@ -31,23 +48,26 @@ else{
         die("connection failed: ".$conn->error);
     }
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $loginuser=$_POST['Username'];
-        $pass=$_POST['Password'];
-        $s = $conn->prepare("SELECT * FROM USERS WHERE Username = '$loginuser'");
+        $loginuser=htmlspecialchars($_POST['Username']);
+        $pass=htmlspecialchars($_POST['Password']);
+        $s = $conn->prepare("SELECT * FROM USERS WHERE Username = ?");
+        $s ->bind_param("s",$loginuser);
         $s->execute();
+        
+        
         
         $userdb = $s->get_result();
         $user=$userdb->fetch_assoc();
-        echo "123";
         
-        if ($user['Password']=$_POST['Password']&& $user['Username']=$_POST['Username']) {
-            echo "123";
+        
+        if ($user['Password']==$_POST['Password']&& $user['Username']==$_POST['Username']) {
+            echo "ifblock";
             $_SESSION['user_name'] = $_POST['Username'];
             setcookie('username', $username, time() + 86400, '/');
 
             header('Location: login.php');
             exit;
-        } else {
+    }   else {
            
             $error = 'Invalid username or password';
         }
