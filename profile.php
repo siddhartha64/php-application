@@ -22,16 +22,18 @@ if($_SESSION['user_name']!=NULL){
     $maxFileSize = 5 * 1024 * 1024;
     if( isset($FILES['image'])){
         $file_name=$FILES['image']['name'];
+         $filename = str_replace("..", "", $filename);
         $file_size=$FILES['image']['size'];
         $file_tmp=$FILES['image']['temp_name'];
         $file_type=$FILES['image']['type'];
         $file_Extension = (pathinfo($FILES, PATHINFO_EXTENSION));
         $path=$targetlocation.$file_name;
-        if ($maxFileSize > $file_size){
-            if (in_array($file_Extension, $allowedExtensions)){
-                if(move_uploaded_file($file_tmp,$path )){
-                    echo"sucessfully uploaded";}
-        }  }     else{
+        if ($file_type== 'image/jpeg') {
+            if ($maxFileSize > $file_size){
+                if (in_array($file_Extension, $allowedExtensions)){
+                    if(move_uploaded_file($file_tmp,$path )){
+                        echo"sucessfully uploaded";}
+        }  }  }   else{
                     echo"could not upload the file";}
     }
     
