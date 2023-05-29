@@ -22,7 +22,7 @@ if($_SESSION['user_name']!=NULL){
     $maxFileSize = 5 * 1024 * 1024;
     if( isset($FILES['image'])){
         $file_name=$FILES['image']['name'];
-         $filename = str_replace("..", "", $filename);
+         $file_name = str_replace("..", "", $file_name);
         $file_size=$FILES['image']['size'];
         $file_tmp=$FILES['image']['temp_name'];
         $file_type=$FILES['image']['type'];
