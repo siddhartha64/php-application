@@ -20,21 +20,21 @@ if($_SESSION['user_name']!=NULL){
     $targetlocation="uploads/";
     $allowedExtensions = array("jpg", "jpeg", "png", "pdf"); 
     $maxFileSize = 5 * 1024 * 1024;
-    if( isset($FILES['image'])){
-        $file_name=$FILES['image']['name'];
+    if( isset($_FILES['image'])){
+        $file_name=$_FILES['image']['name'];
          $file_name = str_replace("..", "", $file_name);
-        $file_size=$FILES['image']['size'];
-        $file_tmp=$FILES['image']['temp_name'];
-        $file_type=$FILES['image']['type'];
-        $file_Extension = (pathinfo($FILES, PATHINFO_EXTENSION));
+        $file_size=$_FILES['image']['size'];
+        $file_tmp=$_FILES['image']['temp_name'];
+        $file_type=$_FILES['image']['type'];
+        $file_Extension = (pathinfo($_FILES, PATHINFO_EXTENSION));
         $path=$targetlocation.$file_name;
-        if ($file_type== 'image/jpeg') {
+        
             if ($maxFileSize > $file_size){
                 if (in_array($file_Extension, $allowedExtensions)){
                     if(move_uploaded_file($file_tmp,$path )){
                         echo"sucessfully uploaded";}
         }  }  }   else{
                     echo"could not upload the file";}
-    }
+    
     
 }?>
